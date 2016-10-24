@@ -18,18 +18,18 @@ namespace NUnit.InventorySystemTests
         public void AddNewItemTest()
         {
             string itemType = "TestType";
-            string itemTitle = "TestTitle";
+            string itemLabel = "TestLabel";
             var expirationTime = DateTime.UtcNow.AddYears(5);
             string attr1Name = "attr1", attr2Name = "attr2";
             int attr1Value = 1, attr2Value = 2;
             {
-                var item = this.Inventory.AddItem(itemType, itemTitle, expirationTime,
+                var item = this.Inventory.AddItem(itemLabel, itemType, expirationTime,
                     new Dictionary<string, object>() { { attr1Name, attr1Value }, { attr2Name, attr2Value } });
             }
             {
-                var item = this.Inventory.GetItem(itemType, itemTitle);
+                var item = this.Inventory.GetItem(itemLabel);
                 Assert.AreEqual(item.Type, itemType);
-                Assert.AreEqual(item.Title, itemTitle);
+                Assert.AreEqual(item.Label, itemLabel);
                 Assert.AreEqual(item.ExpirationTime, expirationTime);
                 Assert.AreEqual(item[attr1Name], attr1Value);
                 Assert.AreEqual(item[attr2Name], attr2Value);
@@ -37,36 +37,36 @@ namespace NUnit.InventorySystemTests
         }
 
         [Test]
-        public void TryAddNewItemEmptyTypeTest()
+        public void TryAddNewItemEmptyLabelTest()
         {
-            Assert.That(() => this.Inventory.AddItem(null, "TestTitle", DateTime.MaxValue), Throws.TypeOf<ArgumentNullException>());
+            Assert.That(() => this.Inventory.AddItem(null, "TestType", DateTime.MaxValue), Throws.TypeOf<ArgumentNullException>());
         }
 
         [Test]
-        public void TryAddNewItemEmptyTitleTest()
+        public void TryAddNewItemEmptyTypeTest()
         {
-            Assert.That(() => this.Inventory.AddItem("TestType", null, DateTime.MaxValue), Throws.TypeOf<ArgumentNullException>());
+            Assert.That(() => this.Inventory.AddItem("TestLabel", null, DateTime.MaxValue), Throws.TypeOf<ArgumentNullException>());
         }
 
         [Test]
         public void UpdateItemAttributeTest()
         {
-            string itemType = "TestType";
-            string itemTitle = "TestTitle";
+            string itemLabel = "TestLabel";
+
             var expirationTime = DateTime.UtcNow.AddYears(5);
             string attr1Name = "attr1";
             int attr1Value = 1, attr1NewValue = 10;
             {
-                var item = this.Inventory.AddItem(itemType, itemTitle, expirationTime,
+                var item = this.Inventory.AddItem(itemLabel, "TestLabel", expirationTime,
                     new Dictionary<string, object>() { { attr1Name, attr1Value } });
             }
             {
-                var item = this.Inventory.GetItem(itemType, itemTitle);
+                var item = this.Inventory.GetItem(itemLabel);
                 Assert.AreEqual(item[attr1Name], attr1Value);
                 item[attr1Name] = attr1NewValue;
             }
             {
-                var item = this.Inventory.GetItem(itemType, itemTitle);
+                var item = this.Inventory.GetItem(itemLabel);
                 Assert.AreEqual(item[attr1Name], attr1NewValue);
             }
         }
@@ -74,20 +74,19 @@ namespace NUnit.InventorySystemTests
         [Test]
         public void SetItemNewAttributeTest()
         {
-            string itemType = "TestType";
-            string itemTitle = "TestTitle";
+            string itemLabel = "TestLabel";
             var expirationTime = DateTime.UtcNow.AddYears(5);
             string attr1Name = "attr1";
             int attr1Value = 1;
             {
-                var item = this.Inventory.AddItem(itemType, itemTitle, expirationTime);
+                var item = this.Inventory.AddItem(itemLabel, "TestLabel", expirationTime);
             }
             {
-                var item = this.Inventory.GetItem(itemType, itemTitle);
+                var item = this.Inventory.GetItem(itemLabel);
                 item[attr1Name] = attr1Value;
             }
             {
-                var item = this.Inventory.GetItem(itemType, itemTitle);
+                var item = this.Inventory.GetItem(itemLabel);
                 Assert.AreEqual(item[attr1Name], attr1Value);
             }
         }
@@ -95,39 +94,27 @@ namespace NUnit.InventorySystemTests
         [Test]
         public void TryGetNonExistentItemByTypeTest()
         {
-            string itemTitle = "TestTitle";
-            this.Inventory.AddItem("TestType", itemTitle, DateTime.MaxValue);
-            var item = this.Inventory.GetItem("TestType2", itemTitle);
-            Assert.IsNull(item);
-        }
-
-        [Test]
-        public void TryGetNonExistentItemByTitleTest()
-        {
-            string itemType = "TestType";
-            this.Inventory.AddItem(itemType, "TestTitle", DateTime.MaxValue);
-            var item = this.Inventory.GetItem(itemType, "TestTitle2");
+            this.Inventory.AddItem("TestLabel", "TestType", DateTime.MaxValue);
+            var item = this.Inventory.GetItem("TestLabel2");
             Assert.IsNull(item);
         }
 
         [Test]
         public void TryAddExistentItemTest()
         {
-            string itemType = "TestType";
-            string itemTitle = "TestTitle";
-            this.Inventory.AddItem(itemType, itemTitle, DateTime.MaxValue);
-            Assert.That(() => this.Inventory.AddItem(itemType, itemTitle, DateTime.MaxValue), Throws.TypeOf<Exception>());
+            string itemLabel = "TestLabel";
+            this.Inventory.AddItem(itemLabel, "TestType", DateTime.MaxValue);
+            Assert.That(() => this.Inventory.AddItem(itemLabel, "TestType2", DateTime.MaxValue), Throws.TypeOf<Exception>());
         }
 
         [Test]
         public void RemoveExistentItemTest()
         {
-            string itemType = "TestType";
-            string itemTitle = "TestTitle";
-            this.Inventory.AddItem(itemType, itemTitle, DateTime.MaxValue);
-            bool wasRemoved = this.Inventory.RemoveItem(itemType, itemTitle);
+            string itemLabel = "TestLabel";
+            this.Inventory.AddItem(itemLabel, "TestType", DateTime.MaxValue);
+            bool wasRemoved = this.Inventory.RemoveItem(itemLabel);
             Assert.IsTrue(wasRemoved);
-            var item = this.Inventory.GetItem(itemType, itemTitle);
+            var item = this.Inventory.GetItem(itemLabel);
             Assert.IsNull(item);
         }
 
@@ -140,19 +127,17 @@ namespace NUnit.InventorySystemTests
                 {
                     removedItem = e.Item;
                 };
-            string itemType = "TestType";
-            string itemTitle = "TestTitle";
-            var item = this.Inventory.AddItem(itemType, itemTitle, DateTime.MaxValue);
-            this.Inventory.RemoveItem(itemType, itemTitle);
+            string itemLabel = "TestLabel";
+            var item = this.Inventory.AddItem(itemLabel, "TestType", DateTime.MaxValue);
+            this.Inventory.RemoveItem(itemLabel);
             Assert.AreEqual(item, removedItem);
         }
 
         [Test]
         public void TryRemoveNonExistentItemTest()
         {
-            string itemType = "TestType";
-            this.Inventory.AddItem(itemType, "TestTitle", DateTime.MaxValue);
-            bool wasRemoved = this.Inventory.RemoveItem(itemType, "TestTitle2");
+            this.Inventory.AddItem("TestLabel", "TestType", DateTime.MaxValue);
+            bool wasRemoved = this.Inventory.RemoveItem("TestLabel2");
             Assert.IsFalse(wasRemoved);
         }
 
@@ -167,9 +152,7 @@ namespace NUnit.InventorySystemTests
                 expiredItem = e.Item;
                 expiredEvent.Set();
             };
-            string itemType = "TestType";
-            string itemTitle = "TestTitle";
-            var item = this.Inventory.AddItem(itemType, itemTitle, DateTime.UtcNow.AddMilliseconds(1000));
+            var item = this.Inventory.AddItem("TestLabel", "TestType", DateTime.UtcNow.AddMilliseconds(1000));
 
             expiredEvent.WaitOne(10000);// wait 10 sec max
 

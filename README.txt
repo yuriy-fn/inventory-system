@@ -7,8 +7,6 @@ IInventory implemenation (InMemoryImplInventory etc) can be registered in DI con
 IInventory and IItem can be enriched or new interfaces with extra methods, which inherit from IInventory/IItem, can be added, to extend functionality.
 Also IItem dynamic arguments provide extra extensibility.
 
-IItem is uniquely identified by the combination of its type and title.
-
 Notifications about expired items will be send either immediately if expired items are added to the inventory, or later at the moment when the item expires.
 
 InMemoryImplInventory uses ConcurrentDictionary as internal storage, which makes the Inventory thread safe as well as provides better performance comparing to using locks.

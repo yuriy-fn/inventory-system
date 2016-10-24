@@ -42,7 +42,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataStructures\Item.cs" />
-    <Compile Include="DataStructures\TypeTitleItemIndex.cs" />
     <Compile Include="InMemoryImplInventory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
