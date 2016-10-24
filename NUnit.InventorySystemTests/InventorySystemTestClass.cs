@@ -37,6 +37,62 @@ namespace NUnit.InventorySystemTests
         }
 
         [Test]
+        public void TryAddNewItemEmptyTypeTest()
+        {
+            Assert.That(() => this.Inventory.AddItem(null, "TestTitle", DateTime.MaxValue), Throws.TypeOf<ArgumentNullException>());
+        }
+
+        [Test]
+        public void TryAddNewItemEmptyTitleTest()
+        {
+            Assert.That(() => this.Inventory.AddItem("TestType", null, DateTime.MaxValue), Throws.TypeOf<ArgumentNullException>());
+        }
+
+        [Test]
+        public void UpdateItemAttributeTest()
+        {
+            string itemType = "TestType";
+            string itemTitle = "TestTitle";
+            var expirationTime = DateTime.UtcNow.AddYears(5);
+            string attr1Name = "attr1";
+            int attr1Value = 1, attr1NewValue = 10;
+            {
+                var item = this.Inventory.AddItem(itemType, itemTitle, expirationTime,
+                    new Dictionary<string, object>() { { attr1Name, attr1Value } });
+            }
+            {
+                var item = this.Inventory.GetItem(itemType, itemTitle);
+                Assert.AreEqual(item[attr1Name], attr1Value);
+                item[attr1Name] = attr1NewValue;
+            }
+            {
+                var item = this.Inventory.GetItem(itemType, itemTitle);
+                Assert.AreEqual(item[attr1Name], attr1NewValue);
+            }
+        }
+
+        [Test]
+        public void SetItemNewAttributeTest()
+        {
+            string itemType = "TestType";
+            string itemTitle = "TestTitle";
+            var expirationTime = DateTime.UtcNow.AddYears(5);
+            string attr1Name = "attr1";
+            int attr1Value = 1;
+            {
+                var item = this.Inventory.AddItem(itemType, itemTitle, expirationTime);
+            }
+            {
+                var item = this.Inventory.GetItem(itemType, itemTitle);
+                item[attr1Name] = attr1Value;
+            }
+            {
+                var item = this.Inventory.GetItem(itemType, itemTitle);
+                Assert.AreEqual(item[attr1Name], attr1Value);
+            }
+        }
+
+        [Test]
         public void TryGetNonExistentItemByTypeTest()
         {
             string itemTitle = "TestTitle";

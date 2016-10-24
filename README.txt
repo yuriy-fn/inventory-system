@@ -10,6 +10,7 @@ IItem is uniquely identified by the combination of its type and title.
 
 Notifications about expired items will be send either immediately if expired items are added to the inventory, or later at the moment when the item expires.
 
+<<<<<<< HEAD
 InMemoryImplInventory uses ConcurrentDictionary as internal storage, which makes the Inventory thread save as well as provides better performance comparing to using locks.
 
 Unit Tests are common ones (InventorySystemTestClass), and can be reused to test different implemenations (InMemoryInventorySystemTestClass etc.)
@@ -18,3 +19,6 @@ QUESTIONS:
 
 1) What kind of security must be implemented? Does it require users registration / logging? Should it be role-based access as "read-only", "read-write" etc?
 
+=======
+Unit Tests are common ones (InventorySystemTestClass), and can be reused to test different implemenations (InMemoryInventorySystemTestClass etc.)
+>>>>>>> origin/master
