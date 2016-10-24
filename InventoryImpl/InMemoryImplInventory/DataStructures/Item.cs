@@ -6,6 +6,9 @@ using System.Text;
 
 namespace InMemoryImplInventory.DataStructures
 {
+    /// <summary>
+    /// inventory item
+    /// </summary>
     internal class Item_ : IItem
     {
         private TypeTitleItemIndex _typeTitleIndex;
@@ -14,6 +17,12 @@ namespace InMemoryImplInventory.DataStructures
 
         private bool _isExpiredEventSent = false;
 
+        /// <summary>
+        /// initialize inventory item
+        /// </summary>
+        /// <param name="typeTitleIndex">index</param>
+        /// <param name="expirationTime">expiration time</param>
+        /// <param name="attributes">dynamic attributes</param>
         public Item_(TypeTitleItemIndex typeTitleIndex, DateTime expirationTime, IDictionary<string, object> attributes)
         {
             if (null == typeTitleIndex)
@@ -29,6 +38,11 @@ namespace InMemoryImplInventory.DataStructures
             }
         }
 
+        /// <summary>
+        /// Get or set dynamic attribute
+        /// </summary>
+        /// <param name="attributeName">attribute name</param>
+        /// <returns>attribute value</returns>
         public object this[string attributeName]
         {
             get
@@ -50,23 +64,33 @@ namespace InMemoryImplInventory.DataStructures
             }
         }
 
+        /// <summary>
+        /// Get item type
+        /// </summary>
         public string Type
         {
             get { return _typeTitleIndex.Type; }
         }
 
+        /// <summary>
+        /// Get item title
+        /// </summary>
         public string Title
         {
             get { return _typeTitleIndex.Title; }
         }
 
+        /// <summary>
+        /// Get item expiration time
+        /// </summary>
         public DateTime ExpirationTime
         {
             get { return _expirationTime; }
         }
 
-        internal TypeTitleItemIndex TypeTitleIndex { get { return _typeTitleIndex; } }
-
+        /// <summary>
+        /// Indicate if event that the item is expired was sent
+        /// </summary>
         internal bool IsExpiredEventSent
         {
             get { return _isExpiredEventSent; }

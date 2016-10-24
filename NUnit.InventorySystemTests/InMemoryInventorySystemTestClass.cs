@@ -23,6 +23,16 @@ namespace NUnit.InventorySystemTests
             _inventory = new InMemoryImplInventory.InMemoryImplInventory();
         }
 
+        /// <summary>
+        /// Dispose inventory instance
+        /// </summary>
+        [TearDown]
+        public void TestCleanUp()
+        {
+            _inventory.Dispose();
+            _inventory = null;
+        }
+
         protected override IInventory Inventory
         {
             get { return _inventory; }
