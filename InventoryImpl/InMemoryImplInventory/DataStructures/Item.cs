@@ -11,7 +11,8 @@ namespace InMemoryImplInventory.DataStructures
     /// </summary>
     internal class Item_ : IItem
     {
-        private TypeTitleItemIndex _typeTitleIndex;
+        private string _label;
+        private string _type;
         private DateTime _expirationTime;
         private Dictionary<string, object> _attributes;
 
@@ -23,13 +24,18 @@ namespace InMemoryImplInventory.DataStructures
         /// <param name="typeTitleIndex">index</param>
         /// <param name="expirationTime">expiration time</param>
         /// <param name="attributes">dynamic attributes</param>
-        public Item_(TypeTitleItemIndex typeTitleIndex, DateTime expirationTime, IDictionary<string, object> attributes)
+        public Item_(string label, string type, DateTime expirationTime, IDictionary<string, object> attributes)
         {
-            if (null == typeTitleIndex)
+            if (string.IsNullOrWhiteSpace(label))
             {
-                throw new ArgumentNullException("typeTitleIndex");
+                throw new ArgumentNullException("Item label can't be empty or whitespace", "label");
             }
-            _typeTitleIndex = typeTitleIndex;
+            if (string.IsNullOrWhiteSpace(type))
+            {
+                throw new ArgumentNullException("Item type can't be empty or whitespace", "type");
+            }
+            _label = label;
+            _type = type;
             _expirationTime = expirationTime;
 
             if (null != attributes)
@@ -65,19 +71,19 @@ namespace InMemoryImplInventory.DataStructures
         }
 
         /// <summary>
+        /// Get item label
+        /// </summary>
+        public string Label
+        {
+            get { return _label; }
+        }
+
+        /// <summary>
         /// Get item type
         /// </summary>
         public string Type
         {
-            get { return _typeTitleIndex.Type; }
-        }
-
-        /// <summary>
-        /// Get item title
-        /// </summary>
-        public string Title
-        {
-            get { return _typeTitleIndex.Title; }
+            get { return _type; }
         }
 
         /// <summary>

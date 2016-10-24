@@ -14,29 +14,27 @@ namespace InventoryCommon.Interfaces
         /// <summary>
         /// Add new item
         /// </summary>
+        /// <param name="label">item label</param>
         /// <param name="type">item type</param>
-        /// <param name="title">item title</param>
         /// <param name="expirationDate">item expiration date</param>
         /// <param name="attributes">item dynamic attributes</param>
         /// <returns>new item</returns>
         /// <exception cref="Exception">Item already exists</exception>
-        IItem AddItem(string type, string title, DateTime expirationDate, IDictionary<string, object> attributes = null);
+        IItem AddItem(string label, string type, DateTime expirationDate, IDictionary<string, object> attributes = null);
 
         /// <summary>
-        /// Return existent item by type and title from the inventory
+        /// Return existent item by label from the inventory
         /// </summary>
-        /// <param name="type">item type</param>
-        /// <param name="title">item title</param>
+        /// <param name="label">item label</param>
         /// <returns>existent item; null, if item is not found</returns>
-        IItem GetItem(string type, string title);
+        IItem GetItem(string label);
 
         /// <summary>
         /// Remove item from the inventory
         /// </summary>
-        /// <param name="type">item type</param>
-        /// <param name="title">item title</param>
+        /// <param name="label">item label</param>
         /// <returns>true, if item was found and removed</returns>
-        bool RemoveItem(string type, string title);
+        bool RemoveItem(string label);
 
         /// <summary>
         /// Event is sent if item was removed

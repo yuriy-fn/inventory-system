@@ -25,7 +25,7 @@ namespace InMemoryImplInventory
         /// <summary>
         /// internal items storage
         /// </summary>
-        private readonly ConcurrentDictionary<TypeTitleItemIndex, Item_> _items = new ConcurrentDictionary<TypeTitleItemIndex, Item_>();
+        private readonly ConcurrentDictionary<string, Item_> _items = new ConcurrentDictionary<string, Item_>();
 
         /// <summary>
         /// cancelation token source to stop items expiration checking thread
@@ -45,50 +45,45 @@ namespace InMemoryImplInventory
         /// <summary>
         /// Add new item
         /// </summary>
+        /// <param name="label">item label</param>
         /// <param name="type">item type</param>
-        /// <param name="title">item title</param>
         /// <param name="expirationDate">item expiration date</param>
         /// <param name="attributes">item dynamic attributes</param>
         /// <returns>new item</returns>
         /// <exception cref="Exception">Item already exists</exception>
-        public IItem AddItem(string type, string title, DateTime expirationDate, IDictionary<string, object> attributes = null)
+        public IItem AddItem(string label, string type, DateTime expirationDate, IDictionary<string, object> attributes = null)
         {
-            var index = new TypeTitleItemIndex(type, title);
-            Item_ item = new Item_(index, expirationDate, attributes);
-            if (!_items.TryAdd(index, item))
+            Item_ item = new Item_(label, type, expirationDate, attributes);
+            if (!_items.TryAdd(label, item))
             {
-                throw new Exception(string.Format("Item of type '{0}' with title '{1}' already exists", type, title));
+                throw new Exception(string.Format("Item with label '{0}' already exists", label));
             }
             return item;
         }
 
         /// <summary>
-        /// Return existent item by type and title from the inventory
+        /// Return existent item by label from the inventory
         /// </summary>
-        /// <param name="type">item type</param>
-        /// <param name="title">item title</param>
+        /// <param name="label">item label</param>
         /// <returns>existent item; null, if item is not found</returns>
-        public IItem GetItem(string type, string title)
+        public IItem GetItem(string label)
         {
-            var index = new TypeTitleItemIndex(type, title);
             Item_ item = null;
-            _items.TryGetValue(index, out item);
+            _items.TryGetValue(label, out item);
             return item;
         }
 
         /// <summary>
         /// Remove item from the inventory
         /// </summary>
-        /// <param name="type">item type</param>
-        /// <param name="title">item title</param>
+        /// <param name="label">item label</param>
         /// <returns>true, if item was found and removed</returns>
-        public bool RemoveItem(string type, string title)
+        public bool RemoveItem(string label)
         {
-            var index = new TypeTitleItemIndex(type, title);
             bool isRemoved = false;
             Item_ item = null;
 
-            isRemoved = _items.TryRemove(index, out item);
+            isRemoved = _items.TryRemove(label, out item);
             if (isRemoved)
             {
                 OnItemRemoved(item);

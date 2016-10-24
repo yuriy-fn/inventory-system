@@ -12,14 +12,14 @@ namespace InventoryCommon.Interfaces
     public interface IItem
     {
         /// <summary>
+        /// Get item label
+        /// </summary>
+        string Label { get; }
+        
+        /// <summary>
         /// Get item type
         /// </summary>
         string Type { get; }
-
-        /// <summary>
-        /// Get item title
-        /// </summary>
-        string Title { get; }
 
         /// <summary>
         /// Get item expiration time
