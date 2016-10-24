@@ -19,4 +19,3 @@ QUESTIONS:
 1) What kind of API is needed (RESTful Web API, WCF)? The current API is simple .NET assembly/interface, where actual implemenation can be registered in DI container.
 	In case of WCF or Web API implementation additional data containers classes (Item etc) will be needed.
 2) What kind of security must be implemented? Does it require users registration / logging? Should it be role-based access as "read-only", "read-write" etc?
-
